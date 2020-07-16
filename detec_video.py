@@ -42,10 +42,12 @@ if __name__ == "__main__":
     parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data/coco.names", help="path to class label file")
     parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
+    parser.add_argument("--webcam", type=int, default=1,  help="Is the video processed video? 1 = Yes, 0 == no" )
     parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
+    parser.add_argument("--directorio_video", type=str, help="Directorio al video")
     parser.add_argument("--checkpoint_model", type=str, help="path to checkpoint model")
     opt = parser.parse_args()
     print(opt)
@@ -62,8 +64,14 @@ if __name__ == "__main__":
     model.eval()  
     classes = load_classes(opt.class_path)
     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
-   
-    cap = cv2.VideoCapture(0)
+    if opt.webcam==1:
+        cap = cv2.VideoCapture(0)
+        out = cv2.VideoWriter('outp.mp4',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1280,960))
+    else:
+        cap = cv2.VideoCapture(opt.directorio_video)
+        # frame_width = int(cap.get(3))
+        # frame_height = int(cap.get(4))
+        out = cv2.VideoWriter('outp.mp4',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1280,960))
     colors = np.random.randint(0, 255, size=(len(classes), 3), dtype="uint8")
     a=[]
     while cap:
@@ -92,16 +100,23 @@ if __name__ == "__main__":
                     box_w = x2 - x1
                     box_h = y2 - y1
                     color = [int(c) for c in colors[int(cls_pred)]]
-                    print("Se detectó {} en X1: {}, Y1: {}, X2: {}, Y2: {}".format(classes[int(cls_pred)], x1, y1, x2, y2))
+                    #print("Se detectó {} en X1: {}, Y1: {}, X2: {}, Y2: {}".format(classes[int(cls_pred)], x1, y1, x2, y2))
                     frame = cv2.rectangle(frame, (x1, y1 + box_h), (x2, y1), color, 5)
                     cv2.putText(frame, classes[int(cls_pred)], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 5)# Nombre de la clase detectada
                     cv2.putText(frame, str("%.2f" % float(conf)), (x2, y2 - box_h), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color, 5) # Certeza de prediccion de la clase
-
+        #
         #Convertimos de vuelta a BGR para que cv2 pueda desplegarlo en los colores correctos
-        cv2.imshow('frame', Convertir_BGR(RGBimg))
+        
+        if opt.webcam==1:
+            cv2.imshow('frame', Convertir_BGR(RGBimg))
+            out.write(RGBimg)
+        else:
+            out.write(Convertir_BGR(RGBimg))
+            cv2.imshow('frame', RGBimg)
         #cv2.waitKey(0)
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
+    # out.release()
     cap.release()
     cv2.destroyAllWindows()

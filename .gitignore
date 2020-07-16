@@ -1,5 +1,10 @@
 *.weights
 *.conv.74
+*.avi
+*.mp4
+
+# Proximo video 
+*train.py
 
 
 # Byte-compiled / optimized / DLL files
