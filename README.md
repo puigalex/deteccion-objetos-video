@@ -1,7 +1,9 @@
 # Deteccion de objetos en video 
 Este repo basado en el proyecto [PyTorch YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3) para correr detección de objetos sobre video. Construí sobre este proyecto para añadir la capacidad de detectar objetos en un stream de video en vivo.
 
-[YOLO](https://pjreddie.com/darknet/yolo/) es un modelo el cual esta optimizado para generar detecciones de elementos a una velocidad muy alta, es por eso que es una muy buena opción para usarlo en video. Tanto el entrenamiento como predicciones con este modelo se ven beneficiadas si se cumple con una computadora que tenga una GPU NVIDIA.
+[YOLO](https://pjreddie.com/darknet/yolo/) (You Only Look Once o Tu Solo Ves Una Vez, pero TSVUV no suena tan bien) es un modelo el cual esta optimizado para generar detecciones de elementos a una velocidad muy alta, es por eso que es una muy buena opción para usarlo en video. Tanto el entrenamiento como predicciones con este modelo se ven beneficiadas si se cumple con una computadora que tenga una GPU NVIDIA.
+
+Por default este modelo esta pre entrenado para detecta 80 distintos objetos, la lista de estos se encuentra en el archivo [data/coco.names](https://github.com/puigalex/deteccion-objetos-video/blob/master/data/coco.names)
 
 Los pasos a seguir para poder correr detección de objetos en el video de una webcam son los siguientes (La creación del ambiente asume que Anaconda esta instalado en la computadora):
 

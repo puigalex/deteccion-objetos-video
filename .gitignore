@@ -4,7 +4,8 @@
 *.mp4
 
 # Proximo video 
-*train.py
+train.py
+test.py
 
 
 # Byte-compiled / optimized / DLL files
