@@ -2,10 +2,20 @@
 *.conv.74
 *.avi
 *.mp4
+*.jpg
+*.pth
+logs
+comandos.txt
+data/custom/labels/*.txt
+!data/custom/labels .gitkeep
 
 # Proximo video 
-train.py
 test.py
+
+train.txt
+valid.txt
+get_coco_dataset.sh
+config/yolov3-custom.cfg
 
 
 # Byte-compiled / optimized / DLL files

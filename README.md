@@ -49,3 +49,41 @@ Si en vez de correr detección de objetos sobre la webcam lo que quieres es corr
 python deteccion_video.py --webcam 0 --directorio_video <directorio_al_video.mp4>
 ```
 
+# Entrenamiento 
+
+Ahora, si lo que quieres es entrenar un modelo con las clases que tu quieras y no utilizar las 80 clases que vienen por default podemos entrenar nuestro propio modelo. Estos son los pasos que deberás seguir:
+
+Primero deberás etiquetar las imagenes con el formato VOC, aqui tengo un video explicando como hacer este etiquetado: 
+
+Desde la carpeta config correremos el archivo create_custom_model para generar un archivo .cfg el cual contiene información sobre la red neuronal para correr las detecciones
+```
+cd config
+bash create_custom_model.sh <Numero_de_clases_a_detectar>
+cd ..
+```
+Descargamos la estructura de pesos de YOLO para poder hacer transfer learning sobre esos pesos
+```
+cd weights
+bash download_darknet.sh
+cd ..
+```
+
+## Poner las imagenes y archivos de metadata en las carpetar necesarias
+
+Las imagenes etiquetadas tienen que estar en el directorio **data/custom/images** mientras que las etiquetas/metadata de las imagenes tienen que estar en **data/custom/labels**.
+Por cada imagen.jpg debe de existir un imagen.txt (metadata con el mismo nombre de la imagen)
+
+El archivo ```data/custom/classes.names``` debe contener el nombre de las clases, como fueron etiquetadas, un renglon por clase.
+
+Los archivos ```data/custom/valid.txt``` y ```data/custom/train.txt``` deben contener la dirección donde se encuentran cada una de las imagenes.
+
+## Entrenar
+
+ ```
+ python train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data --pretrained_weights weights/darknet53.conv.74 --batch_size 2
+ ```
+
+## Correr deteccion de objetos en video con nuestras clases
+```
+python deteccion_video.py --model_def config/yolov3-custom.cfg --checkpoint_model checkpoints/yolov3_ckpt_99.pth --class_path data/custom/classes.names  --weights_path checkpoints/yolov3_ckpt_99.pth  --conf_thres 0.85
+```
