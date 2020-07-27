@@ -9,8 +9,7 @@ comandos.txt
 data/custom/labels/*.txt
 !data/custom/labels .gitkeep
 
-# Proximo video 
-test.py
+
 
 train.txt
 valid.txt

@@ -75,7 +75,10 @@ Por cada imagen.jpg debe de existir un imagen.txt (metadata con el mismo nombre 
 
 El archivo ```data/custom/classes.names``` debe contener el nombre de las clases, como fueron etiquetadas, un renglon por clase.
 
-Los archivos ```data/custom/valid.txt``` y ```data/custom/train.txt``` deben contener la dirección donde se encuentran cada una de las imagenes.
+Los archivos ```data/custom/valid.txt``` y ```data/custom/train.txt``` deben contener la dirección donde se encuentran cada una de las imagenes. Estos se pueden generar con el siguiente comando (estando las imagenes ya dentro de ```data/custom/images```)
+```
+python split_train_val.py
+```
 
 ## Entrenar
 
