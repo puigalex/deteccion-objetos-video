@@ -7,7 +7,6 @@
 logs
 comandos.txt
 data/custom/labels/*.txt
-!data/custom/labels .gitkeep
 
 
 
