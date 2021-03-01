@@ -71,14 +71,15 @@ if __name__ == "__main__":
         cap = cv2.VideoCapture(opt.directorio_video)
         # frame_width = int(cap.get(3))
         # frame_height = int(cap.get(4))
-        out = cv2.VideoWriter('outp.mp4',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1280,960))
+        out = cv2.VideoWriter('outp.mp4',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (1280,720))
     colors = np.random.randint(0, 255, size=(len(classes), 3), dtype="uint8")
     a=[]
+    index_image = 0
     while cap:
         ret, frame = cap.read()
         if ret is False:
             break
-        frame = cv2.resize(frame, (1280, 960), interpolation=cv2.INTER_CUBIC)
+        frame = cv2.resize(frame, (1280, 720), interpolation=cv2.INTER_CUBIC)
         #LA imagen viene en Blue, Green, Red y la convertimos a RGB que es la entrada que requiere el modelo
         RGBimg=Convertir_RGB(frame)
         imgTensor = transforms.ToTensor()(RGBimg)
@@ -99,12 +100,18 @@ if __name__ == "__main__":
                 for x1, y1, x2, y2, conf, cls_conf, cls_pred in detection:
                     box_w = x2 - x1
                     box_h = y2 - y1
-                    color = [int(c) for c in colors[int(cls_pred)]]
-                    print("Se detectó {} en X1: {}, Y1: {}, X2: {}, Y2: {}".format(classes[int(cls_pred)], x1, y1, x2, y2))
-                    frame = cv2.rectangle(frame, (x1, y1 + box_h), (x2, y1), color, 5)
-                    cv2.putText(frame, classes[int(cls_pred)], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 5)# Nombre de la clase detectada
-                    cv2.putText(frame, str("%.2f" % float(conf)), (x2, y2 - box_h), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color, 5) # Certeza de prediccion de la clase
-        #
+                    if int(cls_pred) == 67:
+                        roi = frame[int(y1):int(y2), int(x1):int(x2)]
+                        roi = Convertir_BGR(roi)
+                        cv2.imwrite('data/frame/'+str(index_image)+'.jpg',roi)
+
+                        color = [int(c) for c in colors[int(cls_pred)]]
+                        # print("Se detectó {} en X1: {}, Y1: {}, X2: {}, Y2: {}".format(classes[int(cls_pred)], x1, y1, x2, y2))
+                        frame = cv2.rectangle(Convertir_BGR(frame), (x1, y1 + box_h), (x2, y1), color, 5)
+                        cv2.putText(frame, classes[int(cls_pred)], (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 5)# Nombre de la clase detectada
+                        cv2.putText(frame, str("%.2f" % float(conf)), (x2, y2 - box_h), cv2.FONT_HERSHEY_SIMPLEX, 0.5,color, 5) # Certeza de prediccion de la clase
+                        # print('debug',classes[int(cls_pred)],int(cls_pred),cls_pred)
+        index_image+= 1
         #Convertimos de vuelta a BGR para que cv2 pueda desplegarlo en los colores correctos
         
         if opt.webcam==1:
