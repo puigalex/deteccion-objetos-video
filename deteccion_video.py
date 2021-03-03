@@ -62,8 +62,8 @@ if __name__ == "__main__":
     classes = load_classes(opt.class_path)
     Tensor = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
     if opt.webcam == 1:
-        cap = cv2.VideoCapture(2)
-        cap.set(10, 180)
+        cap = cv2.VideoCapture(0)
+        # cap.set(10, 180)
         out = cv2.VideoWriter('output.mp4', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (1280, 960))
     else:
         cap = cv2.VideoCapture(opt.directorio_video)
