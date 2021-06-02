@@ -50,7 +50,7 @@ torch==1.5.0
 torchvision==0.6.0
 tqdm==4.46.0
 typed-ast==1.4.1
-urllib3==1.25.9
+urllib3==1.26.5
 Werkzeug==1.0.1
 wrapt==1.12.1
 zipp==3.1.0
